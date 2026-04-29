@@ -1,0 +1,40 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "logbooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ownerUid", "order": "ASCENDING" },
+        { "fieldPath": "surgeryDate", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "logbooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ownerUid", "order": "ASCENDING" },
+        { "fieldPath": "subspecialty", "order": "ASCENDING" },
+        { "fieldPath": "surgeryDate", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "logbooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ownerUid", "order": "ASCENDING" },
+        { "fieldPath": "surgeonRole", "order": "ASCENDING" },
+        { "fieldPath": "surgeryDate", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "logbooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ownerUid", "order": "ASCENDING" },
+        { "fieldPath": "isDraft", "order": "ASCENDING" },
+        { "fieldPath": "updatedAt", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
