@@ -2,11 +2,16 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { VitePWA } from 'vite-plugin-pwa'
+import { fileURLToPath } from 'url'
+import path from 'path'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const pkg = (name: string) =>
+  path.resolve(__dirname, `../../packages/${name}/src/index.ts`)
 
 export default defineConfig({
   plugins: [
     react(),
-    // Resolve @otto/* e @/* via tsconfig.json paths — funciona com pnpm workspaces
     tsconfigPaths(),
     VitePWA({
       registerType: 'autoUpdate',
@@ -41,19 +46,30 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    // Essencial para pnpm workspaces: preserva symlinks dos pacotes @otto/*
     preserveSymlinks: true,
+    alias: {
+      // Aliases explícitos para pacotes do workspace → aponta direto para o fonte TypeScript.
+      // Isso garante que o Rollup nunca depende do campo "main" do package.json dos packages
+      // (que aponta para ./dist/index.js, inexistente no Vercel).
+      '@otto/shared-types':    pkg('shared-types'),
+      '@otto/shared-auth':     pkg('shared-auth'),
+      '@otto/shared-firebase': pkg('shared-firebase'),
+      '@otto/shared-ui':       pkg('shared-ui'),
+      '@otto/shared-ontology': pkg('shared-ontology'),
+      '@otto/shared-utils':    pkg('shared-utils'),
+      '@':                     path.resolve(__dirname, 'src'),
+    },
   },
   build: {
     target: 'es2020',
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor':   ['react', 'react-dom'],
-          'router':         ['react-router-dom'],
-          'firebase':       ['firebase/app', 'firebase/auth', 'firebase/firestore'],
-          'query':          ['@tanstack/react-query'],
-          'charts':         ['recharts'],
+          'react-vendor': ['react', 'react-dom'],
+          'router':       ['react-router-dom'],
+          'firebase':     ['firebase/app', 'firebase/auth', 'firebase/firestore'],
+          'query':        ['@tanstack/react-query'],
+          'charts':       ['recharts'],
         },
       },
     },
