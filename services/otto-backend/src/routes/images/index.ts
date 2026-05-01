@@ -1,10 +1,11 @@
-import { Router } from 'express'
+import express from 'express'
+import type { Router } from 'express'
 import { requireAuth } from '../../middleware/requireAuth.js'
 import type { AuthRequest } from '../../middleware/requireAuth.js'
 import type { Response } from 'express'
 import { adminStorage } from '../../services/firebase-admin.js'
 
-export const imagesRouter = Router()
+export const imagesRouter: Router = express.Router()
 imagesRouter.use(requireAuth)
 
 /**

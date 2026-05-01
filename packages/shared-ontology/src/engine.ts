@@ -1,4 +1,4 @@
-import type { ENTOntologyEntry, Subspecialty } from '@otto/shared-types'
+import type { ENTOntologyEntry, Subspecialty } from './types'
 import { ENT_PROCEDURES_SEED } from './seed'
 
 export class ENTOntologyEngine {
@@ -58,3 +58,4 @@ export class ENTOntologyEngine {
     return `https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(meshQuery)}`
   }
 }
+

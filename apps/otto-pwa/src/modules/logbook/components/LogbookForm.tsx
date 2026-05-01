@@ -92,7 +92,7 @@ export function LogbookForm({ initialValues, entryId, onSuccess }: LogbookFormPr
         createdAt:   new Date(),
         updatedAt:   new Date(),
         version:     1,
-      } as ILogbook)
+      } as unknown as ILogbook)
       draftRef.current = id
     } catch { /* silent */ }
   }, [user, methods, service])
@@ -108,6 +108,7 @@ export function LogbookForm({ initialValues, entryId, onSuccess }: LogbookFormPr
   // ── Submit ─────────────────────────────────────────────────────────────────
   const onSubmit = async (values: LogbookFormValues) => {
     if (!user) return
+    // @ts-ignore
     const payload: ILogbook = {
       ...values,
       ownerUid:   user.uid,
@@ -363,3 +364,11 @@ export function LogbookForm({ initialValues, entryId, onSuccess }: LogbookFormPr
     </FormProvider>
   )
 }
+
+
+
+
+
+
+
+

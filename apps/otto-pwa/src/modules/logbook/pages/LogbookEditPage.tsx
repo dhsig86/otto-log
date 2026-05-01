@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { useLogbookEntry } from '../hooks/useLogbookEntry'
+import { useLogbook } from '../hooks/useLogbookEntry'
 import { LogbookForm } from '../components/LogbookForm'
 import { Spinner } from '@otto/shared-ui'
 import type { LogbookFormValues } from '../schemas/logbookForm.schema'
@@ -7,7 +7,7 @@ import type { LogbookFormValues } from '../schemas/logbookForm.schema'
 export default function LogbookEditPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { log, isLoading } = useLogbookEntry(id!)
+  const { log, isLoading } = useLogbook(id!)
 
   if (isLoading) return (
     <div className="flex items-center justify-center py-24">
@@ -75,3 +75,5 @@ export default function LogbookEditPage() {
     </div>
   )
 }
+
+

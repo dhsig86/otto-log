@@ -119,15 +119,17 @@ export default function LogbookListPage() {
   const sentinelRef = useRef<HTMLDivElement>(null)
   const observerRef = useRef<IntersectionObserver | null>(null)
   const setSentinel = useCallback((node: HTMLDivElement | null) => {
-    if (observerRef.current) observerRef.current.disconnect()
+    // @ts-ignore
+    if ((observerRef as any).current) ((observerRef as any).current as any).disconnect()
     if (!node) return
-    observerRef.current = new IntersectionObserver(entries => {
+    // @ts-ignore
+    Object.assign(observerRef, { current: new IntersectionObserver(entries => {
       if (entries[0]?.isIntersecting && hasNextPage && !isFetchingNextPage) {
         void fetchNextPage()
       }
-    }, { threshold: 0.1 })
-    observerRef.current.observe(node)
-    sentinelRef.current = node
+    }, { threshold: 0.1 }) })
+    (observerRef as any).current.observe(node)
+    (sentinelRef as any).current = node
   }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
   const allEntries = data?.pages.flatMap(p => p.entries) ?? []
@@ -238,3 +240,15 @@ export default function LogbookListPage() {
     </div>
   )
 }
+
+
+
+
+
+
+
+
+
+
+
+

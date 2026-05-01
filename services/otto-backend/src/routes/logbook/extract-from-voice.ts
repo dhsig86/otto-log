@@ -1,17 +1,7 @@
 import type { Request, Response } from 'express'
-import OpenAI from 'openai'
 import Anthropic from '@anthropic-ai/sdk'
-import { z } from 'zod'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-
-const WHISPER_PROMPT = `
-Transcrição de relato cirúrgico em português brasileiro, especialidade otorrinolaringologia.
-Termos técnicos comuns: timpanoplastia, estapedotomia, mastoidectomia, septoplastia, turbinectomia,
-adenoidectomia, amigdalectomia, traqueostomia, microcirurgia de laringe, parotidectomia,
-tireoidectomia, esvaziamento cervical, FESS, sinusoplastia, rinoplastia, TVT, implante coclear.
-`
 
 const EXTRACT_PROMPT = `
 Você é um assistente que extrai informações estruturadas de relatos cirúrgicos em otorrinolaringologia.

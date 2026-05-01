@@ -10,10 +10,12 @@ import { imagesRouter } from './routes/images/index.js'
 import { authRouter } from './routes/auth/index.js'
 import { initFirebaseAdmin } from './services/firebase-admin.js'
 
+import type { Express } from 'express'
+
 // Inicializa Firebase Admin SDK
 initFirebaseAdmin()
 
-const app = express()
+const app: Express = express()
 const PORT = process.env.PORT ?? 3001
 
 // ─── Middlewares globais ───

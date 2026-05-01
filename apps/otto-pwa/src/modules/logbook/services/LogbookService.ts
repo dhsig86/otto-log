@@ -1,8 +1,7 @@
 import {
   collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc,
   query, where, orderBy, limit, startAfter as firestoreStartAfter,
-  serverTimestamp, type QueryDocumentSnapshot,
-} from 'firebase/firestore'
+  serverTimestamp, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore'
 import { db } from '@otto/shared-firebase'
 import { createTypedConverter } from '@otto/shared-firebase'
 import type { ILogbook } from '../types'
@@ -49,7 +48,7 @@ export class LogbookService {
 
     return {
       entries,
-      nextCursor: snap.docs.length === pageSize ? (snap.docs.at(-1)?.id ?? null) : null,
+      nextCursor: snap.docs.length === pageSize ? (snap.docs[snap.docs.length - 1]?.id ?? null) : null,
     }
   }
 
@@ -213,3 +212,7 @@ export class LogbookService {
     URL.revokeObjectURL(url)
   }
 }
+
+
+
+

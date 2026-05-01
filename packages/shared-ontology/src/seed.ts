@@ -1,4 +1,4 @@
-import type { ENTOntologyEntry } from '@otto/shared-types'
+import type { ENTOntologyEntry } from './types'
 
 export const ENT_PROCEDURES_SEED: ENTOntologyEntry[] = [
   // ── OTOLOGIA ─────────────────────────────────────────────────────────────
@@ -379,3 +379,4 @@ export const ENT_PROCEDURES_SEED: ENTOntologyEntry[] = [
     complexity: 3,
   },
 ]
+
