@@ -1,15 +1,13 @@
 import { Outlet } from 'react-router-dom'
+import { NavBar } from './NavBar'
 
-/**
- * Layout raiz da aplicação OTTO.
- * Inclui: navigation bar, sidebar mobile, providers de contexto de UI.
- * TODO: Implementar NavBar e Sidebar na Fase 3.
- */
+// AuthProvider foi movido para App.tsx para ser compartilhado por todas as rotas
+// (login + logbook + futuras), garantindo um único contexto de auth
 export default function RootLayout() {
   return (
-    <div className="min-h-screen bg-otto-surface">
-      {/* NavBar global — implementar na Fase 3 */}
-      <main className="h-full">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      <NavBar />
+      <main className="flex-1 w-full">
         <Outlet />
       </main>
     </div>

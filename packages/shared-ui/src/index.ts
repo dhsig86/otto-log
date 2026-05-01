@@ -1,6 +1,10 @@
-/**
- * Design system OTTO.
- * Componentes serão extraídos do otto-pwa e documentados aqui na Fase 1.
- * Por ora, re-exporta tipos de componentes base.
- */
-export type { ButtonVariant } from './types'
+export * from './types'
+export { Button } from './Button'
+export { Input } from './Input'
+export { Textarea } from './Textarea'
+export { Select } from './Select'
+export { FormField } from './FormField'
+export { Badge } from './Badge'
+export { Card } from './Card'
+export { Spinner } from './Spinner'
+export { EmptyState } from './EmptyState'

@@ -1,22 +1,38 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
-import { lazy } from 'react'
+import { lazy, Suspense } from 'react'
+import { logbookRoutes } from './modules/logbook/routes'
 
-// Layout principal
+// Layouts
 const RootLayout = lazy(() => import('./layouts/RootLayout'))
 
-// OTTO Logbook (lazy-loaded)
-const { logbookRoutes } = await import('./modules/logbook/routes')
+// Páginas de autenticação (import síncrono — carregam antes do auth)
+const LoginPage = lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })))
 
 export const router = createBrowserRouter([
+  // ── Autenticação (sem NavBar) ─────────────────────────────────────────────
+  {
+    path: '/login',
+    element: (
+      <Suspense fallback={null}>
+        <LoginPage />
+      </Suspense>
+    ),
+  },
+
+  // ── App principal (com NavBar) ────────────────────────────────────────────
   {
     path: '/',
-    element: <RootLayout />,
+    element: (
+      <Suspense fallback={null}>
+        <RootLayout />
+      </Suspense>
+    ),
     children: [
       {
         index: true,
         element: <Navigate to="/logbook" replace />,
       },
-      // Módulo OTTO Logbook
+      // Módulo OTTO Logbook (rotas protegidas por RequireAuth internamente)
       ...logbookRoutes,
       // Rota 404
       {
