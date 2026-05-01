@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { useLogbookEntry } from '../hooks/useLogbookEntry'
+import { useLogbook } from '../hooks/useLogbookEntry'
 import { useQueryClient } from '@tanstack/react-query'
 import { LogbookService } from '../services/LogbookService'
 import { useAuth } from '@otto/shared-auth'
@@ -10,8 +10,7 @@ import { SUBSPECIALTIES, SURGEON_ROLES, ANESTHESIA_TYPES, LATERALITIES } from '.
 import type { ILogbook } from '../types'
 import { ENTOntologyEngine } from '@otto/shared-ontology'
 
-const engine = new LogbookOntologyEngine()
-function LogbookOntologyEngine() { return new ENTOntologyEngine() }
+const engine = new ENTOntologyEngine()
 
 // ── Helpers de label ──────────────────────────────────────────────────────────
 const lbl = <T extends { value: string | number; label: string }>(arr: readonly T[], val: string | number) =>
@@ -48,7 +47,7 @@ export default function LogbookDetailPage() {
   const navigate       = useNavigate()
   const { user }       = useAuth()
   const queryClient    = useQueryClient()
-  const { log, isLoading } = useLogbookEntry(id!)
+  const { log, isLoading } = useLogbook(id!)
   const service        = new LogbookService()
 
   if (isLoading) return (
@@ -111,14 +110,14 @@ export default function LogbookDetailPage() {
       </Card>
 
       {/* Guidelines (Fase 7) */}
-      {ontologyEntry?.guidelines?.length ? (
+      {((log as any).guidelines || []).length > 0 ? (
         <div>
           <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">
             Guidelines disponíveis
           </h2>
           <div className="flex flex-col gap-2">
-            {ontologyEntry.guidelines.map(g => (
-              <GuidelineCard key={g.url} guideline={g} procedureId={log.procedureId} engine={new ENTOntologyEngine()} />
+            {((log as any).guidelines || []).map((g: any, i: number) => (
+              <GuidelineCard key={i} guideline={g} procedureId={log.procedureId} engine={engine} />
             ))}
           </div>
         </div>
@@ -137,13 +136,13 @@ export default function LogbookDetailPage() {
       {/* Seção 2 — Paciente */}
       <Section title="Paciente" icon="👤">
         <Detail label="Idade"       value={`${log.patientAge} anos`} />
-        <Detail label="Sexo"        value={{ M: 'Masculino', F: 'Feminino', other: 'Outro' }[log.patientSex]} />
+        <Detail label="Sexo"        value={({ M: 'Masculino', F: 'Feminino', other: 'Outro' } as any)[log.patientSex as any]} />
         <Detail label="ASA"         value={`ASA ${log.patientASA}`} />
         {log.patientComorbidities.length > 0 && (
           <div className="col-span-2 sm:col-span-3 flex flex-col gap-0.5">
             <span className="text-xs text-slate-400 uppercase tracking-wide">Comorbidades</span>
             <div className="flex flex-wrap gap-1.5 mt-1">
-              {log.patientComorbidities.map(c => (
+              {log.patientComorbidities.map((c: any) => (
                 <span key={c} className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{c}</span>
               ))}
             </div>
@@ -158,7 +157,7 @@ export default function LogbookDetailPage() {
         {log.team.length > 0 && (
           <div className="col-span-2 sm:col-span-3">
             <span className="text-xs text-slate-400 uppercase tracking-wide block mb-1.5">Equipe</span>
-            {log.team.map((m, i) => (
+            {log.team.map((m: any, i: number) => (
               <p key={i} className="text-sm text-slate-700">{m.name} — <span className="text-slate-400">{m.role}</span></p>
             ))}
           </div>
@@ -186,9 +185,9 @@ export default function LogbookDetailPage() {
         {log.complications.length > 0 && (
           <div className="col-span-2 sm:col-span-3">
             <span className="text-xs text-slate-400 uppercase tracking-wide block mb-1.5">Intercorrências</span>
-            {log.complications.map((c, i) => (
+            {(log.complications || []).map((c: any, i: number) => (
               <div key={i} className="flex items-start gap-2 bg-red-50 border border-red-100 rounded-lg px-3 py-2 mb-2">
-                <Badge label={{ minor: 'Menor', major: 'Maior', 'life-threatening': 'Risco de vida' }[c.severity]} color="red" />
+                <Badge label={({ minor: 'Menor', major: 'Maior', 'life-threatening': 'Risco de Vida' } as any)[c.severity as any]} color="red" />
                 <div>
                   <p className="text-sm font-medium text-slate-800">{c.type}</p>
                   <p className="text-xs text-slate-500">{c.management}</p>
@@ -228,3 +227,7 @@ export default function LogbookDetailPage() {
     </div>
   )
 }
+
+
+
+
