@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter, Navigate, type RouterProviderProps } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
 import { logbookRoutes } from './modules/logbook/routes'
 
@@ -8,7 +8,7 @@ const RootLayout = lazy(() => import('./layouts/RootLayout'))
 // Páginas de autenticação (import síncrono — carregam antes do auth)
 const LoginPage = lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })))
 
-export const router = createBrowserRouter([
+export const router: RouterProviderProps['router'] = createBrowserRouter([
   // ── Autenticação (sem NavBar) ─────────────────────────────────────────────
   {
     path: '/login',

@@ -1,16 +1,18 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tsconfigPaths from 'vite-tsconfig-paths'
 import { VitePWA } from 'vite-plugin-pwa'
-import path from 'path'
 
 export default defineConfig({
   plugins: [
     react(),
+    // Resolve @otto/* e @/* via tsconfig.json paths — funciona com pnpm workspaces
+    tsconfigPaths(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'OTTO — Otorrinolaringologia',
+        name: 'OTTO - Otorrinolaringologia',
         short_name: 'OTTO',
         description: 'Plataforma de suporte clínico para otorrinolaringologia',
         theme_color: '#0f172a',
@@ -39,25 +41,19 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@otto/shared-types': path.resolve(__dirname, '../../packages/shared-types/src'),
-      '@otto/shared-auth': path.resolve(__dirname, '../../packages/shared-auth/src'),
-      '@otto/shared-firebase': path.resolve(__dirname, '../../packages/shared-firebase/src'),
-      '@otto/shared-ui': path.resolve(__dirname, '../../packages/shared-ui/src'),
-      '@otto/shared-ontology': path.resolve(__dirname, '../../packages/shared-ontology/src'),
-      '@otto/shared-utils': path.resolve(__dirname, '../../packages/shared-utils/src'),
-    },
+    // Essencial para pnpm workspaces: preserva symlinks dos pacotes @otto/*
+    preserveSymlinks: true,
   },
   build: {
     target: 'es2020',
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          query: ['@tanstack/react-query'],
-          forms: ['react-hook-form', 'zod'],
-          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
+          'react-vendor':   ['react', 'react-dom'],
+          'router':         ['react-router-dom'],
+          'firebase':       ['firebase/app', 'firebase/auth', 'firebase/firestore'],
+          'query':          ['@tanstack/react-query'],
+          'charts':         ['recharts'],
         },
       },
     },
