@@ -53,7 +53,8 @@ logbookRouter.get('/', async (req: AuthRequest, res: Response) => {
 
 /** GET /api/logbook/:id */
 logbookRouter.get('/:id', async (req: AuthRequest, res: Response) => {
-  const snap = await adminDb.collection(COLLECTION).doc(req.params.id).get()
+  const entryId = String(req.params['id'])
+  const snap = await adminDb.collection(COLLECTION).doc(entryId).get()
   if (!snap.exists) return res.status(404).json({ error: 'Registro não encontrado.' })
   const data = snap.data()!
   if (data['ownerUid'] !== req.uid) return res.status(403).json({ error: 'Acesso negado.' })
@@ -62,7 +63,8 @@ logbookRouter.get('/:id', async (req: AuthRequest, res: Response) => {
 
 /** PATCH /api/logbook/:id */
 logbookRouter.patch('/:id', validate(UpdateLogbookEntrySchema), async (req: AuthRequest, res: Response) => {
-  const snap = await adminDb.collection(COLLECTION).doc(req.params.id).get()
+  const entryId = String(req.params['id'])
+  const snap = await adminDb.collection(COLLECTION).doc(entryId).get()
   if (!snap.exists) return res.status(404).json({ error: 'Registro não encontrado.' })
   if (snap.data()!['ownerUid'] !== req.uid) return res.status(403).json({ error: 'Acesso negado.' })
 
@@ -76,7 +78,8 @@ logbookRouter.patch('/:id', validate(UpdateLogbookEntrySchema), async (req: Auth
 
 /** DELETE /api/logbook/:id */
 logbookRouter.delete('/:id', async (req: AuthRequest, res: Response) => {
-  const snap = await adminDb.collection(COLLECTION).doc(req.params.id).get()
+  const entryId = String(req.params['id'])
+  const snap = await adminDb.collection(COLLECTION).doc(entryId).get()
   if (!snap.exists) return res.status(404).json({ error: 'Registro não encontrado.' })
   if (snap.data()!['ownerUid'] !== req.uid) return res.status(403).json({ error: 'Acesso negado.' })
   await snap.ref.delete()
@@ -85,7 +88,8 @@ logbookRouter.delete('/:id', async (req: AuthRequest, res: Response) => {
 
 /** POST /api/logbook/:id/duplicate */
 logbookRouter.post('/:id/duplicate', async (req: AuthRequest, res: Response) => {
-  const snap = await adminDb.collection(COLLECTION).doc(req.params.id).get()
+  const entryId = String(req.params['id'])
+  const snap = await adminDb.collection(COLLECTION).doc(entryId).get()
   if (!snap.exists) return res.status(404).json({ error: 'Registro não encontrado.' })
   if (snap.data()!['ownerUid'] !== req.uid) return res.status(403).json({ error: 'Acesso negado.' })
 
