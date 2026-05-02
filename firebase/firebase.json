@@ -1,13 +1,14 @@
 {
   "firestore": {
-    "rules": "firebase/firestore.rules",
-    "indexes": "firebase/firestore.indexes.json"
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
   },
   "storage": {
-    "rules": "firebase/storage.rules"
+    "bucket": "otto-ecosystem.firebasestorage.app",
+    "rules": "storage.rules"
   },
   "functions": {
-    "source": "functions",
+    "source": "../functions",
     "runtime": "nodejs20"
   }
 }
