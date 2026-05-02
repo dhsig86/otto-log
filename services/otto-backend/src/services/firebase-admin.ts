@@ -18,13 +18,36 @@ export function initFirebaseAdmin() {
     throw new Error('[firebase-admin] FIREBASE_SERVICE_ACCOUNT_JSON não definido. Configure no Render.')
   }
 
-  // Aceita JSON puro ou JSON codificado em base64
-  let serviceAccount: ServiceAccount
+  // Aceita três formatos:
+  // 1. JSON puro:   { "type": "service_account", ... }
+  // 2. Base64:      eyJ0eXBlIjoic2VydmljZV9hY2NvdW50IiwgLi4ufQ==
+  // 3. JSON escapado com \" (alguns dashboards convertem aspas)
+  let serviceAccount: ServiceAccount | undefined
+
+  // Tentativa 1: base64 → JSON
   try {
     const decoded = Buffer.from(raw, 'base64').toString('utf-8')
-    serviceAccount = JSON.parse(decoded.startsWith('{') ? decoded : raw) as ServiceAccount
-  } catch {
-    serviceAccount = JSON.parse(raw) as ServiceAccount
+    const parsed  = JSON.parse(decoded) as Record<string, unknown>
+    if (parsed['type'] === 'service_account') {
+      serviceAccount = parsed as unknown as ServiceAccount
+    }
+  } catch { /* não era base64 válido */ }
+
+  // Tentativa 2: JSON direto
+  if (!serviceAccount) {
+    try {
+      const parsed = JSON.parse(raw) as Record<string, unknown>
+      if (parsed['type'] === 'service_account') {
+        serviceAccount = parsed as unknown as ServiceAccount
+      }
+    } catch { /* não era JSON válido */ }
+  }
+
+  if (!serviceAccount) {
+    throw new Error(
+      '[firebase-admin] Não foi possível parsear FIREBASE_SERVICE_ACCOUNT_JSON. ' +
+      'Use o valor base64 gerado pelo comando PowerShell.'
+    )
   }
 
   initializeApp({
