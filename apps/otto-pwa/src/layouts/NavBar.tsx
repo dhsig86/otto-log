@@ -14,7 +14,7 @@ export function NavBar() {
     <nav className="bg-slate-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-40 shadow-lg">
       <div className="flex items-center gap-6">
         <Link to="/" className="flex items-center gap-2 font-bold text-lg tracking-tight">
-          <span className="text-blue-400">OTTO</span>
+          <span className="text-emerald-400">OTTO</span>
           <span className="text-slate-300 font-normal text-sm">Logbook</span>
         </Link>
         <div className="hidden sm:flex items-center gap-1">
@@ -28,7 +28,7 @@ export function NavBar() {
                 className={[
                   'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors',
                   active
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-emerald-700 text-white'
                     : 'text-slate-300 hover:bg-slate-700 hover:text-white',
                 ].join(' ')}
               >
@@ -43,7 +43,7 @@ export function NavBar() {
       <div className="flex items-center gap-3">
         <Link
           to="/logbook/new"
-          className="hidden sm:flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-md text-sm font-medium transition-colors"
+          className="hidden sm:flex items-center gap-1.5 bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-md text-sm font-medium transition-colors"
         >
           + Nova entrada
         </Link>

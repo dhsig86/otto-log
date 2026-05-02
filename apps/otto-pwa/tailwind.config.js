@@ -11,13 +11,13 @@ export default {
       colors: {
         otto: {
           primary:   '#0f172a',
-          secondary: '#1e40af',
-          accent:    '#3b82f6',
+          secondary: '#065f46',   // verde nobre
+          accent:    '#059669',
           success:   '#22c55e',
           warning:   '#f59e0b',
           danger:    '#ef4444',
-          surface:   '#f8fafc',
-          border:    '#e2e8f0',
+          surface:   '#f0fdf4',
+          border:    '#d1fae5',
         },
       },
     },

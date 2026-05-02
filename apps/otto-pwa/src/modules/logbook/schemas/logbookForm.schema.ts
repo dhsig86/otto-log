@@ -88,9 +88,9 @@ export const LogbookFormSchema = z.object({
   }),
   approachDetails: z.string().optional(),
 
-  patientAge: z.coerce.number({ required_error: 'Idade obrigatória' }).int().min(0).max(120),
-  patientSex: z.enum(['M','F','other'], { required_error: 'Sexo obrigatório' }),
-  patientASA: z.coerce.number().int().min(1).max(5),
+  patientAge: z.coerce.number({ required_error: 'Idade obrigatória' }).int().min(0).max(120).optional(),
+  patientSex: z.enum(['M','F','other']).optional(),
+  patientASA: z.coerce.number().int().min(1).max(5).optional(),
   patientComorbidities: z.array(z.string()).default([]),
 
   surgeonRole:    z.enum(['attending','first-assistant','second-assistant','resident-primary','fellow'], {

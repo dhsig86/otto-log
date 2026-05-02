@@ -3,14 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --otto-primary: #0f172a;
-  --otto-secondary: #1e40af;
-  --otto-accent: #3b82f6;
-  --otto-success: #22c55e;
-  --otto-warning: #f59e0b;
-  --otto-danger: #ef4444;
-  --otto-surface: #f8fafc;
-  --otto-border: #e2e8f0;
+  --otto-primary:   #0f172a;   /* slate-900  — texto principal */
+  --otto-secondary: #065f46;   /* emerald-900 — verde nobre escuro */
+  --otto-accent:    #059669;   /* emerald-600 — verde nobre médio */
+  --otto-accent-lt: #d1fae5;   /* emerald-100 — fundo claro */
+  --otto-success:   #22c55e;
+  --otto-warning:   #f59e0b;
+  --otto-danger:    #ef4444;
+  --otto-surface:   #f0fdf4;   /* green-50   — fundo levíssimo */
+  --otto-border:    #d1fae5;   /* emerald-100 */
 }
 
 * {

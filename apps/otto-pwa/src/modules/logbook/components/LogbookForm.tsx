@@ -31,8 +31,8 @@ const DEFAULT_VALUES: Partial<LogbookFormValues> = {
   procedureName:        '',
   laterality:           'na',
   patientAge:           undefined,
-  patientSex:           undefined,
-  patientASA:           undefined,
+  patientSex:           undefined,   // optional — sem valor padrão
+  patientASA:           undefined,   // optional — sem valor padrão
   patientComorbidities: [],
   surgeonRole:          undefined,
   team:                 [],
@@ -142,7 +142,7 @@ export function LogbookForm({ initialValues, entryId, onSuccess }: LogbookFormPr
   // ── Erros por seção ────────────────────────────────────────────────────────
   const s1Err = !!(errors.surgeryDate || errors.institutionId)
   const s2Err = !!(errors.subspecialty || errors.procedureId || errors.laterality)
-  const s3Err = !!(errors.patientAge || errors.patientSex || errors.patientASA)
+  const s3Err = !!(errors.patientAge)
   const s4Err = !!(errors.surgeonRole)
   const s5Err = !!(errors.anesthesiaType)
 
@@ -164,12 +164,6 @@ export function LogbookForm({ initialValues, entryId, onSuccess }: LogbookFormPr
               placeholder="Ex: HC-FMUSP, Santa Casa…"
               error={errors.institutionId?.message}
             />
-          </FormField>
-          <FormField label="Início" htmlFor="startTime">
-            <Input id="startTime" type="time" {...register('startTime')} />
-          </FormField>
-          <FormField label="Fim" htmlFor="endTime">
-            <Input id="endTime" type="time" {...register('endTime')} />
           </FormField>
           <FormField label="Duração (min)" htmlFor="durationMinutes">
             <Input id="durationMinutes" type="number" min={1} max={600} {...register('durationMinutes')}
@@ -227,16 +221,28 @@ export function LogbookForm({ initialValues, entryId, onSuccess }: LogbookFormPr
             <Input id="patientAge" type="number" min={0} max={120} {...register('patientAge')}
               placeholder="Ex: 42" error={errors.patientAge?.message} />
           </FormField>
-          <FormField label="Sexo" htmlFor="patientSex" required error={errors.patientSex?.message}>
+          <FormField label="Sexo" htmlFor="patientSex" error={errors.patientSex?.message}>
             <Controller name="patientSex" control={control} render={({ field }) => (
-              <Select {...field} id="patientSex" placeholder="Selecionar…"
+              <Select
+                id="patientSex"
+                placeholder="Selecionar…"
+                value={field.value ?? ''}
+                onChange={e => field.onChange(e.target.value || undefined)}
+                onBlur={field.onBlur}
+                name={field.name}
                 options={[{ value: 'M', label: 'Masculino' }, { value: 'F', label: 'Feminino' }, { value: 'other', label: 'Outro' }]}
                 error={errors.patientSex?.message} />
             )} />
           </FormField>
-          <FormField label="ASA" htmlFor="patientASA" required error={errors.patientASA?.message}>
+          <FormField label="ASA" htmlFor="patientASA" error={errors.patientASA?.message}>
             <Controller name="patientASA" control={control} render={({ field }) => (
-              <Select {...field} id="patientASA" placeholder="Selecionar…"
+              <Select
+                id="patientASA"
+                placeholder="Selecionar…"
+                value={field.value ?? ''}
+                onChange={e => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
+                onBlur={field.onBlur}
+                name={field.name}
                 options={ASA_CLASSES.map(a => ({ value: a.value, label: a.label }))}
                 error={errors.patientASA?.message} />
             )} />
