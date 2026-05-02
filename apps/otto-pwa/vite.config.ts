@@ -47,6 +47,9 @@ export default defineConfig({
   ],
   resolve: {
     preserveSymlinks: true,
+    // Garante instância única de React e React Router mesmo quando
+    // importados de packages internos (@otto/*) via alias
+    dedupe: ['react', 'react-dom', 'react-router-dom', 'react-router', '@tanstack/react-query'],
     alias: {
       // Aliases explícitos para pacotes do workspace → aponta direto para o fonte TypeScript.
       // Isso garante que o Rollup nunca depende do campo "main" do package.json dos packages
