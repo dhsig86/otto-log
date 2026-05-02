@@ -1,12 +1,14 @@
-import { createBrowserRouter, Navigate, type RouterProviderProps } from 'react-router-dom'
+import { createBrowserRouter, type RouterProviderProps } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
 import { logbookRoutes } from './modules/logbook/routes'
+import { RequireAuth } from '@otto/shared-auth'
 
 // Layouts
 const RootLayout = lazy(() => import('./layouts/RootLayout'))
 
-// Páginas de autenticação (import síncrono — carregam antes do auth)
+// Páginas
 const LoginPage = lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })))
+const HomePage  = lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })))
 
 export const router: RouterProviderProps['router'] = createBrowserRouter([
   // ── Autenticação (sem NavBar) ─────────────────────────────────────────────
@@ -19,25 +21,38 @@ export const router: RouterProviderProps['router'] = createBrowserRouter([
     ),
   },
 
-  // ── App principal (com NavBar) ────────────────────────────────────────────
+  // ── Raiz — pai sem layout próprio ─────────────────────────────────────────
   {
     path: '/',
-    element: (
-      <Suspense fallback={null}>
-        <RootLayout />
-      </Suspense>
-    ),
     children: [
+      // Home: painel de módulos (sem NavBar, tela escura própria)
       {
         index: true,
-        element: <Navigate to="/logbook" replace />,
+        element: (
+          <Suspense fallback={null}>
+            <RequireAuth redirectTo="/login">
+              <HomePage />
+            </RequireAuth>
+          </Suspense>
+        ),
       },
-      // Módulo OTTO Logbook (rotas protegidas por RequireAuth internamente)
-      ...logbookRoutes,
-      // Rota 404
+
+      // Módulos com NavBar — wrappados em RootLayout sem path
       {
-        path: '*',
-        lazy: () => import('./pages/NotFound').then(m => ({ Component: m.NotFound })),
+        element: (
+          <Suspense fallback={null}>
+            <RootLayout />
+          </Suspense>
+        ),
+        children: [
+          // Módulo OTTO Logbook (RequireAuth interno nas rotas)
+          ...logbookRoutes,
+          // Rota 404
+          {
+            path: '*',
+            lazy: () => import('./pages/NotFound').then(m => ({ Component: m.NotFound })),
+          },
+        ],
       },
     ],
   },

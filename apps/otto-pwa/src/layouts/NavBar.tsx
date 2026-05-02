@@ -13,8 +13,8 @@ export function NavBar() {
   return (
     <nav className="bg-slate-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-40 shadow-lg">
       <div className="flex items-center gap-6">
-        <Link to="/" className="flex items-center gap-2 font-bold text-lg tracking-tight">
-          <span className="text-emerald-400">OTTO</span>
+        <Link to="/" className="flex items-center gap-2 font-bold text-lg tracking-tight group" title="Voltar ao painel OTTO">
+          <span className="text-emerald-400 group-hover:text-emerald-300 transition-colors">OTTO</span>
           <span className="text-slate-300 font-normal text-sm">Logbook</span>
         </Link>
         <div className="hidden sm:flex items-center gap-1">

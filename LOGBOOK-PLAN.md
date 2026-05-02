@@ -1,7 +1,7 @@
 # OTTO Logbook — Plano de Desenvolvimento e Status
 
 > Documento de controle do projeto. Atualizado automaticamente a cada sessão de desenvolvimento.
-> **Última atualização:** Abril 2026
+> **Última atualização:** Maio 2026
 
 ---
 
@@ -226,13 +226,24 @@ git push origin main
 
 ---
 
-## Próximos Passos Sugeridos
+## Próximos Passos — Backlog Priorizado
 
-1. **Agora:** Fazer o primeiro commit e push (instruções acima)
-2. **Antes de testar:** Configurar Firebase Console e variáveis de ambiente
-3. **Próxima sessão:** Fase 6 — Dashboard de Casuística (decidir quais métricas mostrar)
-4. **Após testes:** Fase 4 — Voice-to-Log com Whisper
-5. **Médio prazo:** Fase 5 — Upload de imagens + Fase 8 — Offline sync
+### 🔴 Alta prioridade (próxima sprint)
+1. **Deploy backend Render.com** — `services/otto-backend` já implementado; falta configurar vars de ambiente no Render e conectar `VITE_BACKEND_URL` no Vercel
+2. **Upload de imagens/exames** — `imageIds[]` já existe no schema e no backend; falta UI de upload (Firebase Storage) e preview no formulário
+3. **Lista de favoritos** — Hospitais e procedimentos frequentes por usuário (persistir em Firestore `/users/{uid}/favorites`); exibir como sugestão rápida no formulário
+4. **OTTO PWA HomePage** ✅ implementado — painel hub de módulos na rota `/`
+
+### 🟡 Média prioridade
+5. **Integração OTTO PROCOD ↔ OTTO LOGBOOK** — ao selecionar procedimento no Logbook, buscar código TUSS/CBHPM no PROCOD; exportar relatórios com codificação correta
+6. **Offline sync** — Firestore persistence já ativo; implementar fila de sync explícita com indicador de status
+7. **Export PDF laudo** — usar backend para gerar PDF cirúrgico formatado (pdfkit ou puppeteer)
+
+### 🟢 Baixa prioridade / futuro
+8. **Voice-to-Log** — ditado de cirurgia via Whisper API → preenchimento automático do formulário
+9. **OTTO Atlas** — módulo de anatomia interativa ORL
+10. **OTTO Guidelines** — protocolos e diretrizes ORL com busca
+11. **Estatísticas agregadas anônimas** — comparativo de casuística entre residentes (opt-in)
 
 ---
 
