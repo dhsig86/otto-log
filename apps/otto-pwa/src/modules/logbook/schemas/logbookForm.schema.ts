@@ -57,51 +57,45 @@ export const COMMON_GRAFTS = [
 ]
 
 const TeamMemberSchema = z.object({
-  name: z.string().min(1, 'Nome obrigatório'),
-  role: z.string().min(1, 'Função obrigatória'),
+  name: z.string().default(''),
+  role: z.string().default(''),
   institution: z.string().optional(),
 })
 
 const ComplicationSchema = z.object({
-  type:       z.string().min(1),
+  type:       z.string().default(''),
   severity:   z.enum(['minor','major','life-threatening']),
-  management: z.string(),
+  management: z.string().default(''),
   resolved:   z.boolean(),
 })
 
 export const LogbookFormSchema = z.object({
-  surgeryDate:     z.string().min(1, 'Data obrigatória'),
+  surgeryDate:     z.string().default(''),
   startTime:       z.string().optional(),
   endTime:         z.string().optional(),
   durationMinutes: z.coerce.number().int().positive().optional(),
-  institutionId:   z.string().min(1, 'Instituição obrigatória'),
-  institutionName: z.string().min(1),
+  institutionId:   z.string().default(''),
+  institutionName: z.string().default(''),
   operatingRoom:   z.string().optional(),
 
-  subspecialty:    z.string().min(1, 'Subespecialidade obrigatória'),
-  procedureId:     z.string().min(1, 'Procedimento obrigatório'),
-  procedureName:   z.string().min(1),
+  subspecialty:    z.string().default(''),
+  procedureId:     z.string().default(''),
+  procedureName:   z.string().default(''),
   procedureCode:   z.string().optional(),
   diagnosisCodes:  z.array(z.string()).default([]),
-  laterality:      z.enum(['right','left','bilateral','midline','na'], {
-    required_error: 'Lateralidade obrigatória',
-  }),
+  laterality:      z.enum(['right','left','bilateral','midline','na']).optional(),
   approachDetails: z.string().optional(),
 
-  patientAge: z.coerce.number({ required_error: 'Idade obrigatória' }).int().min(0).max(120).optional(),
+  patientAge: z.coerce.number().int().min(0).max(120).optional(),
   patientSex: z.enum(['M','F','other']).optional(),
   patientASA: z.coerce.number().int().min(1).max(5).optional(),
   patientComorbidities: z.array(z.string()).default([]),
 
-  surgeonRole:    z.enum(['attending','first-assistant','second-assistant','resident-primary','fellow'], {
-    required_error: 'Papel obrigatório',
-  }),
+  surgeonRole:    z.enum(['attending','first-assistant','second-assistant','resident-primary','fellow']).optional(),
   supervisorName: z.string().optional(),
   team:           z.array(TeamMemberSchema).default([]),
 
-  anesthesiaType: z.enum(['general','regional','local','sedation','combined'], {
-    required_error: 'Tipo de anestesia obrigatório',
-  }),
+  anesthesiaType: z.enum(['general','regional','local','sedation','combined']).optional(),
   graftUsed:       z.string().optional(),
   implantUsed:     z.string().optional(),
   intraopFindings: z.string().optional(),

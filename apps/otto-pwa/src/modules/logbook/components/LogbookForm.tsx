@@ -81,7 +81,7 @@ export function LogbookForm({ initialValues, entryId, onSuccess }: LogbookFormPr
   // ── Auto-save rascunho a cada 10s ─────────────────────────────────────────
   const saveDraft = useCallback(async () => {
     const values = methods.getValues()
-    if (!user || !values.procedureId) return
+    if (!user) return
     try {
       const id = await service.saveDraft(draftRef.current, {
         ...values,
@@ -140,11 +140,11 @@ export function LogbookForm({ initialValues, entryId, onSuccess }: LogbookFormPr
   }
 
   // ── Erros por seção ────────────────────────────────────────────────────────
-  const s1Err = !!(errors.surgeryDate || errors.institutionId)
-  const s2Err = !!(errors.subspecialty || errors.procedureId || errors.laterality)
-  const s3Err = !!(errors.patientAge)
-  const s4Err = !!(errors.surgeonRole)
-  const s5Err = !!(errors.anesthesiaType)
+  const s1Err = false
+  const s2Err = false
+  const s3Err = false
+  const s4Err = false
+  const s5Err = false
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
@@ -153,16 +153,15 @@ export function LogbookForm({ initialValues, entryId, onSuccess }: LogbookFormPr
 
         {/* ── Seção 1: Cirurgia ── */}
         <FormSection title="Cirurgia" icon="🗓" subtitle="Data, horário e local" defaultOpen hasError={s1Err}>
-          <FormField label="Data" htmlFor="surgeryDate" required error={errors.surgeryDate?.message}>
-            <Input id="surgeryDate" type="date" {...register('surgeryDate')} error={errors.surgeryDate?.message} />
+          <FormField label="Data" htmlFor="surgeryDate" hint="Recomendado preencher">
+            <Input id="surgeryDate" type="date" {...register('surgeryDate')} />
           </FormField>
-          <FormField label="Instituição" htmlFor="institutionName" required error={errors.institutionId?.message}>
+          <FormField label="Instituição" htmlFor="institutionName" hint="Recomendado preencher">
             <Input id="institutionName"
               {...register('institutionName', {
                 onChange: e => methods.setValue('institutionId', e.target.value.toLowerCase().replace(/\s+/g, '-'))
               })}
               placeholder="Ex: HC-FMUSP, Santa Casa…"
-              error={errors.institutionId?.message}
             />
           </FormField>
           <FormField label="Duração (min)" htmlFor="durationMinutes">
@@ -176,23 +175,20 @@ export function LogbookForm({ initialValues, entryId, onSuccess }: LogbookFormPr
 
         {/* ── Seção 2: Procedimento ── */}
         <FormSection title="Procedimento" icon="🔬" subtitle="Subespecialidade, código e lateralidade" hasError={s2Err}>
-          <FormField label="Subespecialidade" htmlFor="subspecialty" required error={errors.subspecialty?.message}>
+          <FormField label="Subespecialidade" htmlFor="subspecialty" hint="Recomendado preencher">
             <Controller name="subspecialty" control={control} render={({ field }) => (
               <Select {...field} id="subspecialty" placeholder="Selecionar…"
-                options={SUBSPECIALTIES.map(s => ({ value: s.value, label: s.label }))}
-                error={errors.subspecialty?.message} />
+                options={SUBSPECIALTIES.map(s => ({ value: s.value, label: s.label }))} />
             )} />
           </FormField>
-          <FormField label="Lateralidade" htmlFor="laterality" required error={errors.laterality?.message}>
+          <FormField label="Lateralidade" htmlFor="laterality">
             <Controller name="laterality" control={control} render={({ field }) => (
               <Select {...field} id="laterality" placeholder="Selecionar…"
-                options={LATERALITIES.map(l => ({ value: l.value, label: l.label }))}
-                error={errors.laterality?.message} />
+                options={LATERALITIES.map(l => ({ value: l.value, label: l.label }))} />
             )} />
           </FormField>
           <FullWidth>
-            <FormField label="Procedimento" required error={errors.procedureId?.message}
-              hint="Digite para buscar na ontologia ENT (TUSS, CID-10)">
+            <FormField label="Procedimento" hint="Digite para buscar na ontologia ENT (TUSS, CID-10)">
               <ProcedureSearch subspecialty={subspecialty} />
             </FormField>
             {/* Guidelines e links PubMed exibidos automaticamente ao selecionar procedimento */}
@@ -217,9 +213,9 @@ export function LogbookForm({ initialValues, entryId, onSuccess }: LogbookFormPr
 
         {/* ── Seção 3: Paciente ── */}
         <FormSection title="Paciente" icon="👤" subtitle="Dados clínicos — sem identificação" hasError={s3Err}>
-          <FormField label="Idade" htmlFor="patientAge" required error={errors.patientAge?.message}>
+          <FormField label="Idade" htmlFor="patientAge">
             <Input id="patientAge" type="number" min={0} max={120} {...register('patientAge')}
-              placeholder="Ex: 42" error={errors.patientAge?.message} />
+              placeholder="Ex: 42" />
           </FormField>
           <FormField label="Sexo" htmlFor="patientSex" error={errors.patientSex?.message}>
             <Controller name="patientSex" control={control} render={({ field }) => (
@@ -258,11 +254,10 @@ export function LogbookForm({ initialValues, entryId, onSuccess }: LogbookFormPr
 
         {/* ── Seção 4: Equipe ── */}
         <FormSection title="Equipe" icon="👥" subtitle="Papel cirúrgico e membros" hasError={s4Err}>
-          <FormField label="Seu papel" htmlFor="surgeonRole" required error={errors.surgeonRole?.message}>
+          <FormField label="Seu papel" htmlFor="surgeonRole" hint="Recomendado preencher">
             <Controller name="surgeonRole" control={control} render={({ field }) => (
               <Select {...field} id="surgeonRole" placeholder="Selecionar…"
-                options={SURGEON_ROLES.map(r => ({ value: r.value, label: r.label }))}
-                error={errors.surgeonRole?.message} />
+                options={SURGEON_ROLES.map(r => ({ value: r.value, label: r.label }))} />
             )} />
           </FormField>
           {(surgeonRole === 'resident-primary' || surgeonRole === 'first-assistant') && (
@@ -279,11 +274,10 @@ export function LogbookForm({ initialValues, entryId, onSuccess }: LogbookFormPr
 
         {/* ── Seção 5: Técnica ── */}
         <FormSection title="Técnica cirúrgica" icon="⚙️" subtitle="Anestesia, enxertos, achados" hasError={s5Err}>
-          <FormField label="Anestesia" htmlFor="anesthesiaType" required error={errors.anesthesiaType?.message}>
+          <FormField label="Anestesia" htmlFor="anesthesiaType">
             <Controller name="anesthesiaType" control={control} render={({ field }) => (
               <Select {...field} id="anesthesiaType" placeholder="Selecionar…"
-                options={ANESTHESIA_TYPES.map(a => ({ value: a.value, label: a.label }))}
-                error={errors.anesthesiaType?.message} />
+                options={ANESTHESIA_TYPES.map(a => ({ value: a.value, label: a.label }))} />
             )} />
           </FormField>
           <FormField label="Enxerto / Biomaterial" htmlFor="graftUsed">
